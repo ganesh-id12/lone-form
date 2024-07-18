@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Loan Application</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <form action="confirm.html" method="GET">
+      <h1 class="MainHeading">Loan Application</h1>
+      <label for="fullName">Full Name:</label>
+      <input
+        type="text"
+        id="fullName"
+        name="fullName"
+        pattern="^[a-zA-Z]{4,} [a-zA-Z]{4,}$"
+        required
+      />
+      <br /><br />
+      <label for="email">Email:</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
+        required
+      />
+      <br /><br />
+      <label for="pan">PAN:</label>
+      <input
+        type="text"
+        id="pan"
+        name="pan"
+        pattern="^[A-Z]{5}[0-9]{4}[A-Z]$"
+        required
+      />
+      <br /><br />
+      <label for="loanAmount">Loan Amount:</label>
+      <input
+        type="text"
+        id="loanAmount"
+        name="loanAmount"
+        oninput="showEMI()"
+        pattern="^[0-9]{1,9}$"
+        required
+      />
+      <br /><br />
+      <span id="amountInWords"></span>
+      <br />
+      <span id="emi"></span>
+      <br />
+      <button type="submit" onsubmit="validateForm()">Submit</button>
+    </form>
+
+    <script>
+      function validateForm() {
+          // Full Name validation
+          var fullName = document.getElementById("fullName").value;
+          if (!nameRegex.test(fullName)) {
+            alert(
+              "Full Name must contain only alphabets and spaces, and each word should have at least 4 characters."
+            );
+            return false;
+          }
+        //   // Email validation
+          var email = document.getElementById("email").value;
+          if (!emailRegex.test(email)) {
+            alert("Please enter a valid email address.");
+            return false;
+          }
+        //   // PAN validation
+          var pan = document.getElementById("pan").value;
+          if (!panRegex.test(pan)) {
+            alert("PAN must be in the format ABCDE1234F.");
+            return false;
+          }
+        //   // Loan Amount validation
+          var loanAmount = document.getElementById("loanAmount").value;
+          if (!loanAmountRegex.test(loanAmount)) {
+        alert(
+              "Loan Amount must be a numeric value with a maximum of 9 digits."
+            );
+            return false;
+          }
+      }
+
+      function calculateEMI(amount) {
+        var interestRate = 8.5 / 100 / 12;
+        var tenure = 15 * 12;
+        var emi =
+          (amount * interestRate * Math.pow(1 + interestRate, tenure)) /
+          (Math.pow(1 + interestRate, tenure) - 1);
+        return emi.toFixed(2);
+      }
+
+      function showEMI() {
+        var loanAmount = document.getElementById("loanAmount").value.trim();
+        if (loanAmount) {
+          document.getElementById("emi").innerText =
+            "Estimated EMI: " + calculateEMI(loanAmount);
+        }
+      }
+    </script>
+  </body>
+</html>

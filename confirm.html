@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Confirmation</title>
+    <!-- <link rel="stylesheet" href="./style.css" /> -->
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+      .container {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 100%;
+      }
+      .confirmPageh1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      .confirmPageUserInfo {
+        font-size: 16px;
+        line-height: 1.5;
+        margin-bottom: 20px;
+      }
+      .confirmPageSpan {
+        font-weight: bold;
+      }
+      #otpForm {
+        display: flex;
+        flex-direction: column;
+      }
+      #otpForm input[type="text"] {
+        padding: 10px;
+        font-size: 16px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      .button {
+        padding: 10px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: #ffffff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+        margin-top: 10px;
+      }
+      .button:hover {
+        background-color: #0056b3;
+      }
+      .button:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+      }
+      .message {
+        font-size: 16px;
+        margin-top: 20px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="confirmPageh1">Confirmation</h1>
+      <p class="confirmPageUserInfo">
+        Dear <span id="firstName" class="confirmPageSpan"></span>,<br />
+        Thank you for your inquiry.<br />
+        A 4 digit verification number has been sent to your email:
+        <span id="email" class="confirmPageSpan"></span>,<br />
+        please enter it in the following box and submit for confirmation:
+      </p>
+      <form id="otpForm" onsubmit="event.preventDefault(); validateOTP();">
+        <input type="text" id="otp" placeholder="Enter the OTP" required />
+        <button type="submit" class="button">Validate</button>
+      </form>
+      <button id="generateOtpBtn" class="button" onclick="generateAndShowOTP()">Generate OTP</button>
+      <p class="message" id="message"></p>
+    </div>
+    <script>
+      var attempts = 0;
+      var maxAttempts = 3;
+      var otp;
+
+      function generateAndShowOTP() {
+        otp = Math.floor(1000 + Math.random() * 9000).toString();
+        alert("Generated OTP: " + otp);
+        console.log("Generated OTP:", otp);
+        document.getElementById("generateOtpBtn").style.display = "none";
+      }
+
+      function validateOTP() {
+        var userOtp = document.getElementById("otp").value.trim();
+        attempts++;
+        if (userOtp === otp) {
+          document.getElementById("otpForm").innerHTML = "<p>Validation Successful!</p>";
+        } else {
+          if (attempts >= maxAttempts) {
+            document.getElementById("otpForm").innerHTML = "<p>Validation Failed!</p>";
+          } else {
+            alert("Incorrect OTP. Please try again.");
+            document.getElementById("otp").value = "";
+          }
+        }
+      }
+
+      // Get URL parameters
+      var urlParams = new URLSearchParams(window.location.search);
+      var fullName = urlParams.get("fullName");
+      var email = urlParams.get("email");
+
+      // Display first name and email
+      document.getElementById("firstName").innerText = fullName.split(" ")[0];
+      document.getElementById("email").innerText = email;
+    </script>
+  </body>
+</html>
